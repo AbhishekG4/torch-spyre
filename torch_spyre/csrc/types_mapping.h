@@ -117,7 +117,7 @@ stringToSenDatatypePair(const std::string& type_name) {
           // Boolean and string
           {"bool",
            {sendnn::sen_datatype_enum::boolean,
-            sendnn::sen_datatype_enum::sen_int8}},
+            sendnn::sen_datatype_enum::sen_fp16}},
           {"string",
            {sendnn::sen_datatype_enum::string,
             sendnn::sen_datatype_enum::string}},

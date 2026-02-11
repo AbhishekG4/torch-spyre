@@ -209,6 +209,27 @@ class TestOps(unittest.TestCase, metaclass=ParameterizedTestMeta):
                 "4d_dim_3": (3, cached_randn((12, 8, 25, 64))),
             },
         },
+
+        (
+                "test_mul_",
+                "test_mul_",
+        ): {
+                "param_sets":{
+                    "1d": (
+                        cached_randn(256, dtype=torch.float16),
+                        cached_randn(256, dtype=torch.float16),
+                    ),
+                    "2d": (
+                        cached_randn((256,256), dtype=torch.float16),
+                        cached_randn((256,256), dtype=torch.float16),
+                    ),
+                    "3d": (
+                        cached_randn((64,256,256), dtype=torch.float16),
+                        cached_randn((64,256,256), dtype=torch.float16),
+                    ),
+                },
+        },
+
         (
             "test_alias_operands",
             "test_unary_op",
@@ -779,6 +800,9 @@ class TestOps(unittest.TestCase, metaclass=ParameterizedTestMeta):
     )
     def test_clone(self, x):
         compare_with_cpu(lambda a: torch.clone(a).contiguous(), x)
+
+    def test_mul_(self, x, y):
+        compare_with_cpu(lambda a, b: a.mul_(b), x, y)
 
     def test_dropout_functional(self, input, kwargs):
         compare_with_cpu(lambda a: torch.nn.functional.dropout(a, **kwargs), input)

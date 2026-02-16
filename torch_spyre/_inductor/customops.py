@@ -194,3 +194,17 @@ def _(
     dtype: Optional[torch.dtype] = None,
 ):
     return torch.empty(size, dtype=dtype, device="spyre")
+
+@torch.library.custom_op("spyre::glu", mutates_args=(), device_types="spyre")
+def glu(
+        input: torch.Tensor,
+        dim: int = -1,
+) -> torch.Tensor:
+    pass
+
+@spyre_full.register_fake
+def _(
+        input: torch.Tensor,
+        dim: int = -1,
+):
+    return input.new_empty(input.size())

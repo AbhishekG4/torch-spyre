@@ -129,3 +129,12 @@ def lt_decomp(
     out_le = torch.le(input, other).to(dtype=torch.float16)
     out_ne = torch.ne(input, other).to(dtype=torch.float16)
     return torch.mul(out_le, out_ne, out=out).to(dtype=torch.bool)
+
+@register_decomposition([torch.ops.aten.glu])
+def glu_decomp(
+    input: torch.Tensor,
+    dim: int = -1,
+) -> torch.Tensor: 
+   (x, gate) = torch.chunk(input, 2, dim)
+   gate = torch.sigmoid(gate)
+   return torch.mul(x, gate)

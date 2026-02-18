@@ -223,15 +223,18 @@ class TestOps(unittest.TestCase, metaclass=ParameterizedTestMeta):
 
         (
                 "test_glu",
-                "test_glu",
+                "test_dim_op_cpu",
         ): {
+                "ops_dict": {
+                    "glu": lambda dim, x: torch.nn.functional.glu(x, dim),
+                },
                 "param_sets":{
-                    "1d": (cached_randn(256, dtype=torch.float16),-1),
-                    "2d_dim_0": (cached_randn((256,256), dtype=torch.float16),0),
-                    "2d_dim_1": (cached_randn((256,256), dtype=torch.float16),1),
-                    "3d_dim_0": (cached_randn((128,256,256), dtype=torch.float16),0),
-                    "3d_dim_1": (cached_randn((64,256,256), dtype=torch.float16),1),
-                    "3d_dim_2": (cached_randn((64,256,256), dtype=torch.float16),2),
+                    "1d": (-1,cached_randn(256, dtype=torch.float16)),
+                    "2d_dim_0": (0,cached_randn((256,256), dtype=torch.float16)),
+                    "2d_dim_1": (1,cached_randn((256,256), dtype=torch.float16)),
+                    "3d_dim_0": (0,cached_randn((128,256,256), dtype=torch.float16)),
+                    "3d_dim_1": (1,cached_randn((64,256,256), dtype=torch.float16)),
+                    "3d_dim_2": (2,cached_randn((64,256,256), dtype=torch.float16)),
                 },
         },
 
@@ -956,9 +959,6 @@ class TestOps(unittest.TestCase, metaclass=ParameterizedTestMeta):
     )
     def test_clone(self, x):
         compare_with_cpu(lambda a: torch.clone(a).contiguous(), x)
-
-    def test_glu(self, x, dim= -1):
-        compare_with_cpu(lambda a: torch.nn.functional.glu(a, dim), x)
 
     def test_dropout_functional(self, input, kwargs):
         compare_with_cpu(lambda a: torch.nn.functional.dropout(a, **kwargs), input)

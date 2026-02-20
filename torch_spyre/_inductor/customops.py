@@ -202,9 +202,11 @@ def glu(
 ) -> torch.Tensor:
     pass
 
-@spyre_full.register_fake
+@glu.register_fake
 def _(
         input: torch.Tensor,
         dim: int = -1,
 ):
-    return input.new_empty(input.size())
+    size = list(input.size())
+    size[dim] //= 2
+    return input.new_empty(size)

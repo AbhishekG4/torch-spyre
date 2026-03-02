@@ -455,6 +455,31 @@ def lower_mean(x, axis=None, keepdim=False, *, dtype=None):
     result.realize()
     return result
 
+#@register_spyre_lowering(torch.ops.aten.topk.default)
+#def lower_topk(x, k, dim=-1, largest=True, sorted=True):
+#    kwargs = lowering._make_reduction_inner(
+#        x, axis=[dim], keepdims=True, dtype=x.dtype, override_return_dtype=None
+#    )
+#    
+#    op_info = {
+#        "constants": {
+#            "k": k,
+#            "largest": largest,
+#            "sorted": sorted,
+#            "dim": dim
+#        }
+#    }
+#    
+#    result = SpyreReduction.create(
+#        reduction_type="topk",
+#        input_node=x,
+#        op_info=op_info,
+#        **kwargs
+#    )
+#    
+#    result.realize()
+#    return result
+#--------------------------------------------------------------------------------
 
 @register_spyre_lowering(torch.ops.spyre.gelu)
 def lower_gelu(x, approximate="none"):

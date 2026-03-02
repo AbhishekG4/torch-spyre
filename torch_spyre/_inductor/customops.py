@@ -179,6 +179,51 @@ def _(input: torch.Tensor, approximate: str = "none"):
     return input.new_empty(input.size())
 
 
+@torch.library.custom_op("spyre::topkvalue", mutates_args=(), device_types="spyre")
+def topkvalue(
+    input: torch.Tensor,
+    k: int,
+    dim: Optional[int] = -1,
+    largest: Optional[bool] = True,
+    sorted: Optional[bool] = True
+) -> torch.Tensor:
+    pass
+
+@topkvalue.register_fake
+def _(
+    input: torch.Tensor,
+    k: int,
+    dim: Optional[int] = -1,
+    largest: Optional[bool] = True,
+    sorted: Optional[bool] = True
+):
+    new_size = list(input.size())
+    new_size[dim] = k
+    return input.new_empty(new_size)
+#----------------------------------------------------------------------------------------------
+
+@torch.library.custom_op("spyre::topkindex", mutates_args=(), device_types="spyre")
+def topkindex(
+    input: torch.Tensor,
+    k: int,
+    dim: Optional[int] = -1,
+    largest: Optional[bool] = True,
+    sorted: Optional[bool] = True
+) -> torch.Tensor:
+    pass
+
+@topkindex.register_fake
+def _(
+    input: torch.Tensor,
+    k: int,
+    dim: Optional[int] = -1,
+    largest: Optional[bool] = True,
+    sorted: Optional[bool] = True
+):
+    new_size = list(input.size())
+    new_size[dim] = k
+    return input.new_empty(new_size)
+
 @torch.library.custom_op("spyre::clamp", mutates_args=(), device_types="spyre")
 def clamp(
     input: torch.Tensor,

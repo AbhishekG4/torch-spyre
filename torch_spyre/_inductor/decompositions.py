@@ -321,3 +321,18 @@ def lt_decomp(
     out_le = torch.le(input, other).to(dtype=torch.float16)
     out_ne = torch.ne(input, other).to(dtype=torch.float16)
     return torch.mul(out_le, out_ne, out=out).to(dtype=torch.bool)
+
+
+
+@register_spyre_decomposition([torch.ops.aten.topk.default])
+def topk_decomp(
+    input: torch.Tensor,
+    k: int,
+    dim: Optional[int] = -1,
+    largest: Optional[bool] = True,
+    sorted: Optional[bool] = True
+):
+    indices = torch.ops.spyre.topkindex(input, k, dim, largest, sorted)
+    values = torch.ops.spyre.topkvalue(input, k, dim, largest, sorted)
+
+    return values, indices

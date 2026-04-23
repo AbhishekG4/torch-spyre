@@ -16,13 +16,15 @@ import torch
 import torch_spyre.ops.fallbacks  # noqa: F401
 import torch_spyre._C as _C
 import warnings
+import functools
 
 
-# Decorator to keep track of compiled varient
+# Decorator to keep track of compiled variant
 def compile_once(op, **compile_kwargs):
     def decorator(fn):
         compiled = None
 
+        @functools.wraps(fn)
         def wrapper(*args, **kwargs):
             nonlocal compiled
             if compiled is None:

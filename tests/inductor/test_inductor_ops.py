@@ -3931,6 +3931,19 @@ class TestOps(unittest.TestCase, metaclass=ParameterizedTestMeta):
                 "4d_dim3": (3, cached_randn((2, 4, 8, 64))),
             },
         },
+        ("test_all", "test_reduce_cpu"): {
+                "ops_dict": {
+                    "all": torch.all,
+                },
+                "param_sets": {
+                    "all_default": (
+                        torch.randint(low=0, high=2, size=(1024)).bool(),
+                        torch.randint(low=0, high=2, size=(512,256)).bool(),
+                        torch.randint(low=0, high=2, size=(256,256,128)).bool(),
+                        ),
+                    # TODO: torch.all.dim tests
+                },
+        },
     }
 
     def __init__(self, *args, **kwargs):

@@ -362,13 +362,15 @@ def _(input: torch.Tensor, dim: int, keepdim: bool = False):
     indices = torch.empty(output_shape, dtype=torch.int64, device=input.device)
     return (values, indices)
 
+
 @torch.library.custom_op("spyre::all", mutates_args=(), device_types="spyre")
 def all(input: torch.Tensor, dim: int, keepdim: bool = False) -> torch.Tensor:
     pass
 
+
 @all.register_fake
 def _(input: torch.Tensor, dim: int, keepdim: bool = False) -> torch.Tensor:
-    new_size = [j for i,j in enumerate(input.size()) if i != dim]
+    new_size = [j for i, j in enumerate(input.size()) if i != dim]
     return input.new_empty(new_size)
 
 

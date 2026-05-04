@@ -671,6 +671,7 @@ def bitwise_and(input1: torch.Tensor, input2: torch.Tensor) -> torch.Tensor:
             )
         )
 
+
 @register_spyre_decomposition([torch.ops.aten.all.dim])
 def all_decomp(input: torch.Tensor, dim: int, keepdim: bool = False) -> torch.Tensor:
     return torch.amin(input, dim=dim, keepdim=keepdim)

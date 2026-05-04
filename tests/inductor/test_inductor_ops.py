@@ -3932,17 +3932,17 @@ class TestOps(unittest.TestCase, metaclass=ParameterizedTestMeta):
             },
         },
         ("test_all", "test_reduce_cpu"): {
-                "ops_dict": {
-                    "all": torch.all,
-                },
-                "param_sets": {
-                    "all_default": (
-                        torch.randint(low=0, high=2, size=(1024)).bool(),
-                        torch.randint(low=0, high=2, size=(512,256)).bool(),
-                        torch.randint(low=0, high=2, size=(256,256,128)).bool(),
-                        ),
-                    # TODO: torch.all.dim tests
-                },
+            "ops_dict": {
+                "all": torch.all,
+            },
+            "param_sets": {
+                "all_default": (
+                    torch.randint(low=0, high=2, size=(1024,)).bool(),
+                    torch.randint(low=0, high=2, size=(512, 256)).bool(),
+                    torch.randint(low=0, high=2, size=(256, 256, 128)).bool(),
+                ),
+                # TODO: torch.all.dim tests
+            },
         },
     }
 

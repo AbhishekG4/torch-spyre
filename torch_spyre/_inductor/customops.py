@@ -1008,3 +1008,13 @@ def _(input: torch.Tensor, dim: int, keepdim: bool = False) -> torch.Tensor:
     else:
         out_shape = out_shape[:dim] + out_shape[dim + 1 :]
     return torch.empty(out_shape, dtype=input.dtype, device=input.device)
+
+
+@torch.library.custom_op("spyre::to_fp16", mutates_args=(), device_types="spyre")
+def to_fp16(input: torch.Tensor) -> torch.Tensor:
+    return input.to(dtype=torch.float16)
+
+
+@to_fp16.register_fake
+def _(input: torch.Tensor):
+    return torch.empty_like(input, dtype=torch.float16)

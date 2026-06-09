@@ -812,35 +812,22 @@ def where_scalar_decomp(condition, self, other):
     return torch.ops.aten.where.self(condition, self_t, other_t)
 
 
-# Store original torch.all
-orig_all = torch.all
-
-
 @register_spyre_decomposition([torch.ops.aten.all.default, torch.ops.aten.all.dim])
 def spyre_all(
     input: torch.Tensor,
     dim: Optional[int] = None,
     keepdim: bool = False,
 ) -> torch.Tensor:
-    if input.device.type != "spyre":
-        return orig_all(input, dim=dim, keepdim=keepdim)
-
     # Convert bool to float16 if needed
     if input.dtype is torch.bool:
-        tmp = torch.empty_like(input, dtype=torch.float16)
-        tmp.copy_(input)
+        tmp = torch.ops.spyre.to_fp16(input)
     else:
         tmp = input
 
     tmp = torch.abs(tmp)
-
     result = torch.amin(tmp, dim=dim, keepdim=keepdim)
 
     return result
-
-
-# Monkey patch
-torch.all = spyre_all
 
 
 ###############################################################################################

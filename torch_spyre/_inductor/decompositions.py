@@ -1318,3 +1318,33 @@ def spyre_index_add(
     updated = gathered + source
     indices: list[Optional[torch.Tensor]] = [None] * dim + [index]
     return torch.index_put(self, indices, updated, accumulate=False)
+
+    
+@register_spyre_decomposition([torch.ops.aten.all.default, torch.ops.aten.all.dim])
+def spyre_all(
+    input: torch.Tensor,
+    dim: Optional[int] = None,
+    keepdim: bool = False,
+) -> torch.Tensor:
+    # Convert bool to float16 if needed
+    if input.dtype is torch.bool:
+        tmp = torch.ops.spyre.to_fp16(input)
+    else:
+        tmp = input
+
+    tmp = torch.abs(tmp)
+    result = torch.amin(tmp, dim=dim, keepdim=keepdim)
+
+    return result
+
+
+###############################################################################################
+##                           Register custom kernels for Spyre.                              ##
+###############################################################################################
+# Kernels are registered permanently in the C++ dispatcher by
+# ``_register_spyre_dispatchkey_kernels_permanently()`` (idempotent).
+# Once registered, ``OPWrapper.__call__`` uses ``torch.compiler.is_compiling()``
+# to route dispatch: inside a ``torch.compile`` context the Spyre function is
+# called directly; outside (eager mode) the pre-compiled wrapper is used.
+# Note: This has to stay at the end of the file.
+_register_spyre_dispatchkey_kernels_permanently()

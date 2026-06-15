@@ -398,6 +398,8 @@ COMPILED_OPS = [
     aten.clamp,
     aten.constant_pad_nd,
     aten.embedding.default,
+    aten.any.dim,
+    aten.all.default,
 ]
 
 register_torch_compile_kernel(COMPILED_OPS)

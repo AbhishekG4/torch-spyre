@@ -1880,8 +1880,12 @@ def lower_prod_dim(x, dim, keepdim=False):
 def lower_any_dim(x, dim, keepdim=False):
     x = to_dtype(x, torch.float16)
     x.realize()
+
+    # Handle both single dimension and tuple of dimensions
+    axis = [dim] if isinstance(dim, int) else list(dim)
+
     kwargs = lowering._make_reduction_inner(
-        x, axis=[dim], keepdims=keepdim, dtype=x.dtype, override_return_dtype=None
+        x, axis=axis, keepdims=keepdim, dtype=x.dtype, override_return_dtype=None
     )
     result = Reduction.create(
         reduction_type="absmax",

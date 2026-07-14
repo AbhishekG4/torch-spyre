@@ -1877,6 +1877,7 @@ def lower_prod_dim(x, dim, keepdim=False):
 
 
 @register_spyre_lowering(torch.ops.aten.any.dim, type_promotion_kind=None)
+@register_spyre_lowering(torch.ops.aten.any.dims, type_promotion_kind=None)
 def lower_any_dim(x, dim, keepdim=False):
     x = to_dtype(x, torch.float16)
     x.realize()

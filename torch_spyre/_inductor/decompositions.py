@@ -1178,6 +1178,7 @@ def spyre_prod_dim_int(
     return acc
 
 
+<<<<<<< HEAD
 def _masked_scatter_reject_reason(
     self: torch.Tensor,
     mask: torch.Tensor,
@@ -1321,6 +1322,9 @@ def spyre_index_add(
 
     
 @register_spyre_decomposition([torch.ops.aten.all.default, torch.ops.aten.all.dim])
+=======
+@register_spyre_decompositions([torch.ops.aten.all.default, torch.ops.aten.all.dim])
+>>>>>>> 04d9177 (rebasing with main and adding remaining ops to eager.py)
 def spyre_all(
     input: torch.Tensor,
     dim: Optional[int] = None,
@@ -1338,7 +1342,7 @@ def spyre_all(
     return result
 
 
-@register_spyre_decomposition([torch.ops.aten.all.all_out])
+@register_spyre_decompositions([torch.ops.aten.all.all_out])
 def spyre_all_out(
     input: torch.Tensor,
     *,
@@ -1346,15 +1350,3 @@ def spyre_all_out(
 ) -> torch.Tensor:
     result = torch.all(input)
     return out.copy_(result)
-
-
-###############################################################################################
-##                           Register custom kernels for Spyre.                              ##
-###############################################################################################
-# Kernels are registered permanently in the C++ dispatcher by
-# ``_register_spyre_dispatchkey_kernels_permanently()`` (idempotent).
-# Once registered, ``OPWrapper.__call__`` uses ``torch.compiler.is_compiling()``
-# to route dispatch: inside a ``torch.compile`` context the Spyre function is
-# called directly; outside (eager mode) the pre-compiled wrapper is used.
-# Note: This has to stay at the end of the file.
-_register_spyre_dispatchkey_kernels_permanently()

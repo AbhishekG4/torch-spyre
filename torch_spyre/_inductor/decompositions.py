@@ -1338,6 +1338,16 @@ def spyre_all(
     return result
 
 
+@register_spyre_decomposition([torch.ops.aten.all.all_out])
+def spyre_all_out(
+    input: torch.Tensor,
+    *,
+    out: torch.Tensor,
+) -> torch.Tensor:
+    result = torch.all(input)
+    return out.copy_(result)
+
+
 ###############################################################################################
 ##                           Register custom kernels for Spyre.                              ##
 ###############################################################################################

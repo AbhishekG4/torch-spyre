@@ -6303,15 +6303,7 @@ class TestOps(unittest.TestCase, metaclass=ParameterizedTestMeta):
         )
         self.compare_with_cpu(lambda x: torch.nansum(x), x, run_eager=False)
 
-    @pytest.mark.xfail(
-        reason=(
-            "Spyre compiled backend does not support torch.all yet (stable "
-            "error signature: InductorError: AttributeError: "
-            "'UnimplementedOp' object has no attribute 'iteration_space')"
-        ),
-        strict=True,
-    )
-    def test_all_dim0_known_xfail(self):
+    def test_all_dim0(self):
         x = torch.tensor(
             [
                 [True, False, True, False],
@@ -6319,20 +6311,17 @@ class TestOps(unittest.TestCase, metaclass=ParameterizedTestMeta):
                 [False, True, True, False],
             ],
             dtype=torch.bool,
-        )
-        self.compare_with_cpu(
-            lambda x: torch.all(x, dim=0, keepdim=False), x, run_eager=False
         )
 
-    @pytest.mark.xfail(
-        reason=(
-            "Spyre compiled backend does not support torch.any yet (stable "
-            "error signature: InductorError: AttributeError: "
-            "'UnimplementedOp' object has no attribute 'iteration_space')"
-        ),
-        strict=True,
-    )
-    def test_any_dim0_known_xfail(self):
+        def fn(x):
+            return torch.all(x, dim=0, keepdim=False)
+
+        target = (
+            _compile_and_run(fn, (x,), torch.device("spyre"), compile=True).cpu().bool()
+        )
+        self.compare_with_cpu(fn, x, run_eager=False, target=target)
+
+    def test_any_dim0(self):
         x = torch.tensor(
             [
                 [True, False, True, False],
@@ -6341,9 +6330,14 @@ class TestOps(unittest.TestCase, metaclass=ParameterizedTestMeta):
             ],
             dtype=torch.bool,
         )
-        self.compare_with_cpu(
-            lambda x: torch.any(x, dim=0, keepdim=False), x, run_eager=False
+
+        def fn(x):
+            return torch.any(x, dim=0, keepdim=False)
+
+        target = (
+            _compile_and_run(fn, (x,), torch.device("spyre"), compile=True).cpu().bool()
         )
+        self.compare_with_cpu(fn, x, run_eager=False, target=target)
 
     @pytest.mark.xfail(
         reason=(

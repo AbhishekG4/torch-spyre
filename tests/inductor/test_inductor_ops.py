@@ -6316,10 +6316,7 @@ class TestOps(unittest.TestCase, metaclass=ParameterizedTestMeta):
         def fn(x):
             return torch.all(x, dim=0, keepdim=False)
 
-        target = (
-            _compile_and_run(fn, (x,), torch.device("spyre"), compile=True).cpu().bool()
-        )
-        self.compare_with_cpu(fn, x, run_eager=False, target=target)
+        self.compare_with_cpu(fn, x, run_eager=False)
 
     def test_any_dim0(self):
         x = torch.tensor(
@@ -6334,10 +6331,7 @@ class TestOps(unittest.TestCase, metaclass=ParameterizedTestMeta):
         def fn(x):
             return torch.any(x, dim=0, keepdim=False)
 
-        target = (
-            _compile_and_run(fn, (x,), torch.device("spyre"), compile=True).cpu().bool()
-        )
-        self.compare_with_cpu(fn, x, run_eager=False, target=target)
+        self.compare_with_cpu(fn, x, run_eager=False)
 
     @pytest.mark.xfail(
         reason=(

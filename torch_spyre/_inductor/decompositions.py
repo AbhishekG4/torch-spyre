@@ -1178,7 +1178,6 @@ def spyre_prod_dim_int(
     return acc
 
 
-<<<<<<< HEAD
 def _masked_scatter_reject_reason(
     self: torch.Tensor,
     mask: torch.Tensor,
@@ -1322,9 +1321,6 @@ def spyre_index_add(
 
     
 @register_spyre_decomposition([torch.ops.aten.all.default, torch.ops.aten.all.dim])
-=======
-@register_spyre_decompositions([torch.ops.aten.all.default, torch.ops.aten.all.dim])
->>>>>>> 04d9177 (rebasing with main and adding remaining ops to eager.py)
 def spyre_all(
     input: torch.Tensor,
     dim: Optional[int] = None,

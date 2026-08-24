@@ -401,9 +401,6 @@ COMPILED_OPS = [
     aten.any.default,
     aten.any.dim,
     aten.any.dims,
-    aten.all.default,
-    aten.all.all_out,
-    aten.all.dim,
 ]
 
 register_torch_compile_kernel(COMPILED_OPS)

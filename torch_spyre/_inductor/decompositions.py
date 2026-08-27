@@ -1338,31 +1338,3 @@ def spyre_index_add(
     updated = gathered + source
     indices: list[Optional[torch.Tensor]] = [None] * dim + [index]
     return torch.index_put(self, indices, updated, accumulate=False)
-
-    
-@register_spyre_decomposition([torch.ops.aten.all.default, torch.ops.aten.all.dim])
-def spyre_all(
-    input: torch.Tensor,
-    dim: Optional[int] = None,
-    keepdim: bool = False,
-) -> torch.Tensor:
-    # Convert bool to float16 if needed
-    if input.dtype is torch.bool:
-        tmp = torch.ops.spyre.to_fp16(input)
-    else:
-        tmp = input
-
-    tmp = torch.abs(tmp)
-    result = torch.amin(tmp, dim=dim, keepdim=keepdim)
-
-    return result
-
-
-@register_spyre_decompositions([torch.ops.aten.all.all_out])
-def spyre_all_out(
-    input: torch.Tensor,
-    *,
-    out: torch.Tensor,
-) -> torch.Tensor:
-    result = torch.all(input)
-    return out.copy_(result)
